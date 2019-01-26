@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import SelectComponent from './SelectComponent'
-
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
+import { Segment, Form, Button } from 'semantic-ui-react'
 
 const QUERY_LABEL = gql`
     query {
@@ -42,11 +42,9 @@ class SubscriptionForm extends Component {
         this.setState({ email: e.target.value })
     }
 
-    handleSelectComponentChange = (e, listName) => {
-        // Change this logic after the new select component added
-        const val = e.target.value
-        const list = this.state[listName]
-        this.setState({ [listName]: [...list, val] })
+    handleSelectComponentChange = (selectedOptions, listName, data) => {
+        const listIds = selectedOptions.map(item => item.value)
+        this.setState({ [listName]: listIds })
     }
 
     onFormSubmit = (e, subscribeUser) => {
@@ -57,40 +55,42 @@ class SubscriptionForm extends Component {
             labelIdList: [],
             languageIdList: []
         })
-        // Show message to the user and clean the form
+        // TODO: Show message to the user and clean the form
     }
 
     render() {
         const { email } = this.state
         return (
             <Mutation mutation={MUTATION_SUBSCRIBE}>
-                { subscribeUser => (
-                    <form className="subscriptionForm" onSubmit={ e => this.onFormSubmit(e, subscribeUser)}>
-                        <div className="formField">
-                            <span>Email:</span>
-                            <input type="email"
-                                name="email"
-                                value={email}
-                                onChange={this.onEmailChange} />
-                        </div>
-                        <div className="formField">
-                            <span>Label:</span>
-                            <SelectComponent
-                                name="labels"
-                                query={QUERY_LABEL}
-                                handleChange={ e => this.handleSelectComponentChange(e, 'labelIdList')}></SelectComponent>
-                        </div>
-                        <div className="formField">
-                            <span>Language:</span>
-                            <SelectComponent
-                                name="languages"
-                                query={QUERY_LANGUAGE}
-                                handleChange={ e => this.handleSelectComponentChange(e, 'languageIdList')}></SelectComponent>
-                        </div>
-                        <div className="formField">
-                            <button type="submit">Subscribe</button>
-                        </div>
-                    </form>
+                {subscribeUser => (
+                    <Segment>
+                        <Form className="subscriptionForm" onSubmit={e => this.onFormSubmit(e, subscribeUser)}>
+                            <Form.Field>
+                                <label>Email</label>
+                                <input placeholder='Email' type="email"
+                                    name="email"
+                                    value={email}
+                                    onChange={this.onEmailChange} />
+                            </Form.Field>
+
+                            <Form.Field>
+                                <label>Label</label>
+                                <SelectComponent
+                                    name="labels"
+                                    query={QUERY_LABEL}
+                                    handleChange={selectedOptions => this.handleSelectComponentChange(selectedOptions, 'labelIdList')}></SelectComponent>
+                            </Form.Field>
+
+                            <Form.Field>
+                                <label>Language</label>
+                                <SelectComponent
+                                    name="languages"
+                                    query={QUERY_LANGUAGE}
+                                    handleChange={selectedOptions => this.handleSelectComponentChange(selectedOptions, 'languageIdList')}></SelectComponent>
+                            </Form.Field>
+                            <Button type="submit">Subscribe</Button>
+                        </Form>
+                    </Segment>
                 )}
             </Mutation>
         )
