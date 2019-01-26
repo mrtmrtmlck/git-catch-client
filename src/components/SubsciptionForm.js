@@ -23,9 +23,9 @@ const QUERY_LANGUAGE = gql`
 `
 
 const MUTATION_SUBSCRIBE = gql`
-    mutation SubscribeUser($email: String, $labelIdList: [Int], $languageIdList: [Int]){
-        subscribeUser (email: $email, labelIdList: $labelIdList, languageIdList: $languageIdList) {
-            id
+    mutation SendVerificationEmail($email: String, $labelIdList: [Int], $languageIdList: [Int]){
+        sendVerificationEmail (email: $email, labelIdList: $labelIdList, languageIdList: $languageIdList) {
+            succeed
         }
     }
 `
@@ -50,6 +50,7 @@ class SubscriptionForm extends Component {
     onFormSubmit = (e, subscribeUser) => {
         e.preventDefault();
         subscribeUser({ variables: this.state })
+        console.log(this.state)
         this.setState({
             email: '',
             labelIdList: [],
