@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import SelectComponent from './SelectComponent'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
-import { Segment, Form, Button } from 'semantic-ui-react'
+import { Form, Button, Input } from 'semantic-ui-react'
 
 const QUERY_LABEL = gql`
     query {
@@ -64,34 +64,29 @@ class SubscriptionForm extends Component {
         return (
             <Mutation mutation={MUTATION_SUBSCRIBE}>
                 {subscribeUser => (
-                    <Segment>
-                        <Form className="subscriptionForm" onSubmit={e => this.onFormSubmit(e, subscribeUser)}>
-                            <Form.Field>
-                                <label>Email</label>
-                                <input placeholder='Email' type="email"
-                                    name="email"
-                                    value={email}
-                                    onChange={this.onEmailChange} />
-                            </Form.Field>
+                    <Form className="subscriptionForm" onSubmit={e => this.onFormSubmit(e, subscribeUser)}>
+                        <Form.Field>
+                            <Input placeholder='Email' type="email"
+                                name="email"
+                                value={email}
+                                onChange={this.onEmailChange} />
+                        </Form.Field>
 
-                            <Form.Field>
-                                <label>Label</label>
-                                <SelectComponent
-                                    name="labels"
-                                    query={QUERY_LABEL}
-                                    handleChange={selectedOptions => this.handleSelectComponentChange(selectedOptions, 'labelIdList')}></SelectComponent>
-                            </Form.Field>
+                        <Form.Field>
+                            <SelectComponent
+                                name="labels"
+                                query={QUERY_LABEL}
+                                handleChange={selectedOptions => this.handleSelectComponentChange(selectedOptions, 'labelIdList')}></SelectComponent>
+                        </Form.Field>
 
-                            <Form.Field>
-                                <label>Language</label>
-                                <SelectComponent
-                                    name="languages"
-                                    query={QUERY_LANGUAGE}
-                                    handleChange={selectedOptions => this.handleSelectComponentChange(selectedOptions, 'languageIdList')}></SelectComponent>
-                            </Form.Field>
-                            <Button type="submit">Subscribe</Button>
-                        </Form>
-                    </Segment>
+                        <Form.Field>
+                            <SelectComponent
+                                name="languages"
+                                query={QUERY_LANGUAGE}
+                                handleChange={selectedOptions => this.handleSelectComponentChange(selectedOptions, 'languageIdList')}></SelectComponent>
+                        </Form.Field>
+                        <Button fluid size="huge" type="submit" content="Subscribe" color="teal" />
+                    </Form>
                 )}
             </Mutation>
         )

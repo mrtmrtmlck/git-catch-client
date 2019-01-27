@@ -12,7 +12,6 @@ const MUTATION_SUBSCRIBE = gql`
 
 export default function SubscribeUser(props) {
   const params = new URLSearchParams(props.location.search);
-  console.log(params.get('token'))
   return (
     <Mutation mutation={MUTATION_SUBSCRIBE} variables={{token:params.get('token')}}>
       {subscribeUser => (

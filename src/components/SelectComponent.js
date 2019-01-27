@@ -16,6 +16,7 @@ class SelectComponent extends Component {
                             isMulti="true"
                             onChange={this.props.handleChange}
                             options={optionsData}
+                            placeholder={"Select " + this.props.name}
                         />
                     )
                 }}
