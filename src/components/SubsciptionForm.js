@@ -1,35 +1,11 @@
 import React, { Component } from 'react'
-import SelectComponent from './SelectComponent'
 import { Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
 import { Form, Button, Input } from 'semantic-ui-react'
-import EmailVerificationNotification from './EmailVerificationNotification';
 
-const QUERY_LABEL = gql`
-    query {
-        labels {
-            id
-            name
-        }
-    }
-`
+import EmailVerificationResult from './EmailVerificationResult'
+import MultiSelect from './MultiSelect'
+import { QUERY_LABEL, QUERY_LANGUAGE, MUTATION_SEND_VERIFICATION_EMAIL } from '../constants/GQLConstants'
 
-const QUERY_LANGUAGE = gql`
-    query {
-        languages {
-            id
-            name
-        }
-    }
-`
-
-const MUTATION_SUBSCRIBE = gql`
-    mutation SendVerificationEmail($email: String, $labelIdList: [Int], $languageIdList: [Int]){
-        sendVerificationEmail (email: $email, labelIdList: $labelIdList, languageIdList: $languageIdList) {
-            succeed
-        }
-    }
-`
 
 class SubscriptionForm extends Component {
 
@@ -61,33 +37,32 @@ class SubscriptionForm extends Component {
     render() {
         const { email } = this.state
         return (
-            <Mutation mutation={MUTATION_SUBSCRIBE}>
-                {(subscribeUser, {data}) => (
-                    !data || !data['sendVerificationEmail']['succeed'] ? 
-                    <Form className="subscriptionForm" onSubmit={e => this.onFormSubmit(e, subscribeUser)}>
-                        <Form.Field>
-                            <Input placeholder='Email' type="email"
-                                name="email"
-                                value={email}
-                                onChange={this.onEmailChange} />
-                        </Form.Field>
+            <Mutation mutation={MUTATION_SEND_VERIFICATION_EMAIL}>
+                {(subscribeUser, { data }) => (
+                    data && data['sendVerificationEmail']['succeed'] ? <EmailVerificationResult /> :
+                        <Form className="subscriptionForm" onSubmit={e => this.onFormSubmit(e, subscribeUser)}>
+                            <Form.Field>
+                                <Input placeholder='Email' type='email'
+                                    name='email'
+                                    value={email}
+                                    onChange={this.onEmailChange} />
+                            </Form.Field>
 
-                        <Form.Field>
-                            <SelectComponent
-                                name="labels"
-                                query={QUERY_LABEL}
-                                handleChange={selectedOptions => this.handleSelectComponentChange(selectedOptions, 'labelIdList')}></SelectComponent>
-                        </Form.Field>
+                            <Form.Field>
+                                <MultiSelect
+                                    name='labels'
+                                    query={QUERY_LABEL}
+                                    handleChange={selectedOptions => this.handleSelectComponentChange(selectedOptions, 'labelIdList')}></MultiSelect>
+                            </Form.Field>
 
-                        <Form.Field>
-                            <SelectComponent
-                                name="languages"
-                                query={QUERY_LANGUAGE}
-                                handleChange={selectedOptions => this.handleSelectComponentChange(selectedOptions, 'languageIdList')}></SelectComponent>
-                        </Form.Field>
-                        <Button fluid size="huge" type="submit" content="Subscribe" color="teal" />
-                    </Form>
-                    : <EmailVerificationNotification/>
+                            <Form.Field>
+                                <MultiSelect
+                                    name='languages'
+                                    query={QUERY_LANGUAGE}
+                                    handleChange={selectedOptions => this.handleSelectComponentChange(selectedOptions, 'languageIdList')}></MultiSelect>
+                            </Form.Field>
+                            <Button fluid size='huge' type='submit' content='Subscribe' color='teal' />
+                        </Form>
                 )}
             </Mutation>
         )

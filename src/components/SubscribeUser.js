@@ -1,31 +1,20 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
 
-const MUTATION_SUBSCRIBE = gql`
-  mutation SubscribeUser($token: String) {
-    subscribeUser(token: $token) {
-      succeed
-    }
-  }
-`
+import SubscriptionResult from './SubscriptionResult'
+import { MUTATION_SUBSCRIBE } from '../constants/GQLConstants'
 
-export default function SubscribeUser(props) {
+
+function SubscribeUser(props) {
   const params = new URLSearchParams(props.location.search);
   return (
     <Mutation mutation={MUTATION_SUBSCRIBE} variables={{token:params.get('token')}}>
       {subscribeUser => (
-        <EmailVerificationResult subscribeUser={subscribeUser} />
+        <SubscriptionResult subscribeUser={subscribeUser} />
       )}
     </Mutation>
   )
 }
 
-class EmailVerificationResult extends Component {
-  componentDidMount() {
-    this.props.subscribeUser();
-  }
-  render() {
-    return <div>SUCCESSFUL</div>;
-  }
-}
+
+export default SubscribeUser

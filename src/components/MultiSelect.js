@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Query } from 'react-apollo'
-import Select from 'react-select';
+import Select from 'react-select'
 
-class SelectComponent extends Component {
-    render(props) {
+class MultiSelect extends Component {
+    render() {
         return (
             <Query query={this.props.query}>
                 {({ loading, error, data }) => {
@@ -25,4 +25,4 @@ class SelectComponent extends Component {
     }
 }
 
-export default SelectComponent
+export default MultiSelect
