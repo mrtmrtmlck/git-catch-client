@@ -3,6 +3,7 @@ import SelectComponent from './SelectComponent'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { Form, Button, Input } from 'semantic-ui-react'
+import EmailVerificationNotification from './EmailVerificationNotification';
 
 const QUERY_LABEL = gql`
     query {
@@ -50,20 +51,19 @@ class SubscriptionForm extends Component {
     onFormSubmit = (e, subscribeUser) => {
         e.preventDefault();
         subscribeUser({ variables: this.state })
-        console.log(this.state)
         this.setState({
             email: '',
             labelIdList: [],
             languageIdList: []
         })
-        // TODO: Show message to the user and clean the form
     }
 
     render() {
         const { email } = this.state
         return (
             <Mutation mutation={MUTATION_SUBSCRIBE}>
-                {subscribeUser => (
+                {(subscribeUser, {data}) => (
+                    !data || !data['sendVerificationEmail']['succeed'] ? 
                     <Form className="subscriptionForm" onSubmit={e => this.onFormSubmit(e, subscribeUser)}>
                         <Form.Field>
                             <Input placeholder='Email' type="email"
@@ -87,6 +87,7 @@ class SubscriptionForm extends Component {
                         </Form.Field>
                         <Button fluid size="huge" type="submit" content="Subscribe" color="teal" />
                     </Form>
+                    : <EmailVerificationNotification/>
                 )}
             </Mutation>
         )
