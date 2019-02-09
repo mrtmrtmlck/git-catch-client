@@ -21,15 +21,15 @@ export const QUERY_LANGUAGE = gql`
 export const MUTATION_SEND_VERIFICATION_EMAIL = gql`
     mutation SendVerificationEmail($email: String, $labelIdList: [Int], $languageIdList: [Int]){
         sendVerificationEmail (email: $email, labelIdList: $labelIdList, languageIdList: $languageIdList) {
-            succeed
+            success
         }
     }
 `
 
 export const MUTATION_SUBSCRIBE = gql`
-  mutation SubscribeUser($token: String) {
-    subscribeUser(token: $token) {
-      succeed
+    mutation SubscribeUser($token: String) {
+        subscribeUser(token: $token) {
+            success
+        }
     }
-  }
 `

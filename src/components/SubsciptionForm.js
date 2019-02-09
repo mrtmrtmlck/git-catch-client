@@ -38,7 +38,7 @@ class SubscriptionForm extends Component {
         this.setState({ error : error })
     }
 
-    isFormValid = e => {
+    isFormValid = function() {
         let isValid = true
         let error = {}
 
@@ -68,9 +68,16 @@ class SubscriptionForm extends Component {
         }
 
         return (
-            <span class='error'>{this.state.error[fieldName]}</span>
+            <span className='error'>{this.state.error[fieldName]}</span>
         )
     }
+
+    displayGeneralError = function() {
+        return (
+            <span className='error'>Unexpected error occured</span>
+        )       
+    }
+
     onFormSubmit = (e, subscribeUser) => {
         e.preventDefault();
 
@@ -87,12 +94,16 @@ class SubscriptionForm extends Component {
         })
     }
 
+    isResultSuccessful = (data) => {
+        return data && data['sendVerificationEmail']['success']       
+    }
+
     render() {
         const { email } = this.state
         return (
             <Mutation mutation={MUTATION_SEND_VERIFICATION_EMAIL}>
                 {(subscribeUser, { data }) => (
-                    data && data['sendVerificationEmail']['succeed'] ? <EmailVerificationResult /> :
+                     this.isResultSuccessful(data) ? <EmailVerificationResult /> :
                         <Form className="subscriptionForm" onSubmit={e => this.onFormSubmit(e, subscribeUser)}>
                             <Form.Field>
                                 <Input placeholder='Email' type='email'
