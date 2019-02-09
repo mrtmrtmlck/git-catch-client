@@ -23,3 +23,7 @@ body {
 input {
   border-color: hsl(0,0%,80%) !important;
 }
+
+.error {
+  color: red;
+}

@@ -12,25 +12,78 @@ class SubscriptionForm extends Component {
     state = {
         email: '',
         labelIdList: [],
-        languageIdList: []
+        languageIdList: [],
+        error: {}
     }
 
     onEmailChange = e => {
-        this.setState({ email: e.target.value })
+        const targetVal = e.target.value
+        this.setState({ email: targetVal })
+        this.updateErrorState('email', targetVal) 
     }
 
     handleSelectComponentChange = (selectedOptions, listName, data) => {
         const listIds = selectedOptions.map(item => item.value)
         this.setState({ [listName]: listIds })
+        this.updateErrorState(listName, listIds) 
     }
 
+    updateErrorState = (type, value) => {
+        if(!value) {
+            return
+        }
+
+        let error = this.state.error
+        error[type] = ''
+        this.setState({ error : error })
+    }
+
+    isFormValid = e => {
+        let isValid = true
+        let error = {}
+
+        if(this.state.email.length === 0) {
+            error['email'] = 'Please enter your email address'
+            isValid = false
+        }
+
+        if(this.state.labelIdList.length === 0) {
+            error['labelIdList'] = 'Please select at least one label'
+            isValid = false
+        }
+
+        if(this.state.languageIdList.length === 0) {
+            error['languageIdList'] = 'Please select at least one language'
+            isValid = false
+        }
+        
+        this.setState({ error : error })
+
+        return isValid
+    }
+    
+    displayValidationError = fieldName => {
+        if(!this.state.error[fieldName]) {
+            return ''
+        }
+
+        return (
+            <span class='error'>{this.state.error[fieldName]}</span>
+        )
+    }
     onFormSubmit = (e, subscribeUser) => {
         e.preventDefault();
+
+        if(!this.isFormValid()) {
+            return
+        }
+
         subscribeUser({ variables: this.state })
         this.setState({
             email: '',
             labelIdList: [],
-            languageIdList: []
+            languageIdList: [],
+            error: {}
         })
     }
 
@@ -46,6 +99,7 @@ class SubscriptionForm extends Component {
                                     name='email'
                                     value={email}
                                     onChange={this.onEmailChange} />
+                                {this.displayValidationError('email')}
                             </Form.Field>
 
                             <Form.Field>
@@ -53,6 +107,7 @@ class SubscriptionForm extends Component {
                                     name='labels'
                                     query={QUERY_LABEL}
                                     handleChange={selectedOptions => this.handleSelectComponentChange(selectedOptions, 'labelIdList')}></MultiSelect>
+                                {this.displayValidationError('labelIdList')}
                             </Form.Field>
 
                             <Form.Field>
@@ -60,6 +115,7 @@ class SubscriptionForm extends Component {
                                     name='languages'
                                     query={QUERY_LANGUAGE}
                                     handleChange={selectedOptions => this.handleSelectComponentChange(selectedOptions, 'languageIdList')}></MultiSelect>
+                                {this.displayValidationError('languageIdList')}
                             </Form.Field>
                             <Button fluid size='huge' type='submit' content='Subscribe' color='teal' />
                         </Form>
