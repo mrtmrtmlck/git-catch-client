@@ -8,15 +8,22 @@ body {
   padding: 5% !important;
 }
 
-.column-left {
+.grid-container {
+  align-items: center !important;
+}
+
+.grid-column-left {
   padding-right: 5% !important; 
+  vertical-align: middle;
+  text-align: center;
 }
 
-.column-right {
+.grid-column-right {
   padding-left: 5% !important;
+  vertical-align: middle;
 }
 
-::placeholder{
+::placeholder {
   color: hsl(0,0%,50%) !important;
 }
 

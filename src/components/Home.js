@@ -6,8 +6,8 @@ import SubscriptionForm from './SubsciptionForm'
 function Home() {
     return (
         <Segment size='large' className='main-segment'>
-            <Grid columns={2} stackable divided>
-                <Grid.Column textAlign='center' className='column-left'>
+            <Grid columns={2} stackable divided className='grid-container'>
+                <Grid.Column className='grid-column-left'>
                     <Header size='large'>What is GitCatch?</Header>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                     sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -20,7 +20,7 @@ function Home() {
                     Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
                     mollit anim id est laborum.</p>
                 </Grid.Column>
-                <Grid.Column verticalAlign='middle' className='column-right'>
+                <Grid.Column className='grid-column-right'>
                     <SubscriptionForm />
                 </Grid.Column>
             </Grid>

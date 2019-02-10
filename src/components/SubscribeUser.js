@@ -9,8 +9,8 @@ function SubscribeUser(props) {
   const params = new URLSearchParams(props.location.search);
   return (
     <Mutation mutation={MUTATION_SUBSCRIBE} variables={{token:params.get('token')}}>
-      {subscribeUser => (
-        <SubscriptionResult subscribeUser={subscribeUser} />
+      {(subscribeUser, { data }) => (
+        <SubscriptionResult subscribeUser={subscribeUser} data={data}/>
       )}
     </Mutation>
   )
